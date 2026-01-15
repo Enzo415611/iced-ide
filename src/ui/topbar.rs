@@ -11,7 +11,7 @@ impl App {
             top_bar_button(),
             Menu::new(
                 vec![
-                    Item::new(top_bar_menu_button(Message::ButtonTest, "Open File".to_string(), button_menu_style())),
+                    Item::new(top_bar_menu_button(Message::OpenFile, "Open File".to_string(), button_menu_style())),
                     Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string(), button_menu_style()))
                 ])
             .spacing(2.0)

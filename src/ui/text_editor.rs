@@ -7,6 +7,8 @@ impl App {
         text_editor(&self.content)
             .on_action(Message::Edit)
             .height(Length::Fill)
+            .highlight(&self.current_file_extension, iced::highlighter::Theme::SolarizedDark)
+            .wrapping(iced::widget::text::Wrapping::None)
             .style(|_, _| text_editor_style())
             .into()
     }
