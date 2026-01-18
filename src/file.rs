@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf, task::ready};
+use std::{fs, path::PathBuf};
 
 use rfd::FileDialog;
 

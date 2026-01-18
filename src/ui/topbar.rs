@@ -14,31 +14,29 @@ impl App {
                     Item::new(top_bar_menu_button(Message::OpenFile, "Open File".to_string(), button_menu_style())),
                     Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string(), button_menu_style()))
                 ])
-            .spacing(2.0)
-            .max_width(100.0),
+                .spacing(2.0)
+                .max_width(100.0),
         );
 
         let open_menu = Item::with_menu(
-            button(image("src/assets/menu-hamburguer.png")
-                
-            ).style(|_, _| {
-                button::Style {
-                    ..Default::default()
-                }
-            }),
+            button(image("src/assets/menu-hamburguer.png"))
+                .on_press(Message::ButtonTest),
             Menu::new(vec![file_menu]).max_width(100.0),
         );
 
         row![
             row![
                 MenuBar::new(vec![open_menu])
-            ].width(Length::Fill)
+            ]
+            .width(Length::Fill)
             .align_y(Alignment::Start),
             row![
-                button(text("X").size(10.0)).height(Length::Fill).on_press(Message::CloseWindow)
+                button(image("src/assets/controles-deslizantes-de-configuracoes.png")).on_press(Message::OpenConfig)
             ]
+            .spacing(1.0)
             .align_y(Alignment::End)
-        ].height(20.0)
+        ]
+        .height(20.0)
         .into()
     }
 }

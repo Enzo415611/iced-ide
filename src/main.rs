@@ -1,11 +1,11 @@
-use std::{fmt::Debug, path::PathBuf, sync::Arc};
+use std::{fmt::Debug, path::PathBuf};
 
-use iced::{Task, widget::{text_editor}};
+use iced::{Size, Theme, widget::text_editor};
 
-use crate::file::{open_file, read_file};
 
 mod ui;
 mod file;
+mod update;
 
 fn main() -> iced::Result {
      iced::application(App::boot, App::update, App::view)
@@ -14,67 +14,51 @@ fn main() -> iced::Result {
             id: Some("IDE".to_string()),
             ..Default::default() 
         })
-        .decorations(false)
+        .resizable(true)
+        .window_size(Size::new(800., 600.))
+        .theme(App::theme)
         .run()
 }
 
-enum Windows {
-    EditorWindow,
-    ConfigWindow,
+#[derive(PartialEq)]
+enum Screens {
+    EditorScreen,
+    ConfigScreen,
 }
-
-struct App{
-    current_window: Windows,
-    content: text_editor::Content,
-    current_file_path: PathBuf,
-    current_file_extension: String,
-}
-
 
 #[derive(Debug, Clone)]
 enum Message {
     ButtonTest,
     OpenFile,
-    CloseWindow,
     Edit(text_editor::Action),
-    SaveFile   
+    SaveFile,
+    OpenConfig
 }
+
+
+struct App{
+    current_window: Screens,
+    content: text_editor::Content,
+    current_file_path: PathBuf,
+    current_file_extension: String,
+    app_theme: iced::Theme,
+}
+
+
 
 
 impl App {
     fn boot() -> Self {
         Self {
             content: text_editor::Content::new(),
-            current_window: Windows::EditorWindow,
+            current_window: Screens::EditorScreen,
             current_file_path: PathBuf::new(),
-            current_file_extension: String::new()  
+            current_file_extension: String::new(),
+            app_theme: Theme::CatppuccinFrappe,
         }
     }
     
-    fn update(&mut self, message: Message) ->  Task<Message> {
-        match message {
-            Message::ButtonTest => {
-                Task::none()
-            }
-            Message::CloseWindow => {
-                iced::exit()
-            },
-            Message::Edit(action) => {
-                self.content.perform(action);
-                Task::none()
-            },
-            Message::OpenFile => {
-                self.current_file_path = open_file();
-                self.current_file_extension = self.current_file_path.extension().unwrap().display().to_string();
-                read_file(&self.current_file_path);
-                self.content.perform(text_editor::Action::Edit(text_editor::Edit::Paste(Arc::new(read_file(&self.current_file_path)))));
-                Task::none()
-            }
-            _=> {
-                Task::none()
-            }
-            
-            
-        }
+    fn theme(&self) -> iced::Theme {
+        self.app_theme.clone()
     }
 }
