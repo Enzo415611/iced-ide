@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use iced::{Task, widget::text_editor};
+use iced::{Task, widget::{pane_grid, text_editor}};
 
 use crate::{App, Message, Screens, file::{open_file, read_file}};
 
@@ -27,6 +27,10 @@ impl App {
                 } else {
                     self.current_window = Screens::EditorScreen;
                 }
+                Task::none()
+            },
+            Message::PaneResized(pane_grid::ResizeEvent {ratio, split}) => {
+                self.panes.resize(split, ratio);                
                 Task::none()
             }
             _=> {

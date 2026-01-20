@@ -1,11 +1,12 @@
 use std::{fmt::Debug, path::PathBuf};
 
-use iced::{Size, Theme, widget::text_editor};
+use iced::{Size, Theme, widget::{pane_grid, text_editor}};
 
 
 mod ui;
 mod file;
 mod update;
+
 
 fn main() -> iced::Result {
      iced::application(App::boot, App::update, App::view)
@@ -26,35 +27,44 @@ enum Screens {
     ConfigScreen,
 }
 
+enum Pane {
+    EditorPane,
+    TreeViewPane,
+}
+
 #[derive(Debug, Clone)]
 enum Message {
     ButtonTest,
     OpenFile,
     Edit(text_editor::Action),
     SaveFile,
-    OpenConfig
+    OpenConfig,
+    PaneResized(pane_grid::ResizeEvent),
 }
 
 
-struct App{
+struct App {
     current_window: Screens,
     content: text_editor::Content,
     current_file_path: PathBuf,
     current_file_extension: String,
     app_theme: iced::Theme,
+    panes: pane_grid::State<Pane>
 }
-
-
-
 
 impl App {
     fn boot() -> Self {
+        let (mut panes, pane) = pane_grid::State::new(Pane::TreeViewPane);
+        
+        _=panes.split(pane_grid::Axis::Vertical, pane, Pane::EditorPane);
+        let text_editor_content = text_editor::Content::new();
         Self {
-            content: text_editor::Content::new(),
+            content: text_editor_content,
             current_window: Screens::EditorScreen,
             current_file_path: PathBuf::new(),
             current_file_extension: String::new(),
-            app_theme: Theme::CatppuccinFrappe,
+            app_theme: Theme::Dark,
+            panes
         }
     }
     

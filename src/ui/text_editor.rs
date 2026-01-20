@@ -9,6 +9,7 @@ impl App {
             .height(Length::Fill)
             .highlight(&self.current_file_extension, iced::highlighter::Theme::SolarizedDark)
             .wrapping(iced::widget::text::Wrapping::None)
+            .placeholder("Editor")
             .style(|_, _| text_editor_style())
             .into()
     }
@@ -18,7 +19,7 @@ impl App {
 fn text_editor_style() -> text_editor::Style {
     text_editor::Style {
         background: iced::Background::Color(Color::TRANSPARENT),
-        border: iced::Border { color: BORDER_COLOR, width: 0.8, radius: Radius { top_left: 0.0, top_right: 0.0, bottom_right: 5.0, bottom_left: 5.0 } },
+        border: iced::Border { color: BORDER_COLOR, width: 0.0, radius: Radius::new(0.0) },
         placeholder: Color::WHITE,
         selection: Color { r: 0.0, g: 173.0, b: 245.0, a: 0.8 },
         value: Color::WHITE

@@ -3,16 +3,16 @@ use iced::{
 };
 use iced_aw::{Menu, MenuBar, menu::Item};
 
-use crate::{App, Message, ui::colors::BORDER_COLOR};
+use crate::{App, Message, ui::colors::{BORDER_COLOR, BUTTON_BACKGROUND_COLOR, BUTTON_HOVERED_COLOR}};
 
 impl App {
     pub fn top_bar(&self) -> Element<'_, Message> {
         let file_menu = Item::with_menu(
-            top_bar_button(),
+            top_bar_menu_button(Message::ButtonTest, "File".to_string()),
             Menu::new(
                 vec![
-                    Item::new(top_bar_menu_button(Message::OpenFile, "Open File".to_string(), button_menu_style())),
-                    Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string(), button_menu_style()))
+                    Item::new(top_bar_menu_button(Message::OpenFile, "Open File".to_string())),
+                    Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string()))
                 ])
                 .spacing(2.0)
                 .max_width(100.0),
@@ -20,6 +20,7 @@ impl App {
 
         let open_menu = Item::with_menu(
             button(image("src/assets/menu-hamburguer.png"))
+                .style(|_, s| button_menu_style(&s))
                 .on_press(Message::ButtonTest),
             Menu::new(vec![file_menu]).max_width(100.0),
         );
@@ -31,7 +32,7 @@ impl App {
             .width(Length::Fill)
             .align_y(Alignment::Start),
             row![
-                button(image("src/assets/controles-deslizantes-de-configuracoes.png")).on_press(Message::OpenConfig)
+                button(image("src/assets/controles-deslizantes-de-configuracoes.png")).style(|_,s| button_menu_style(&s) ).on_press(Message::OpenConfig)
             ]
             .spacing(1.0)
             .align_y(Alignment::End)
@@ -41,49 +42,50 @@ impl App {
     }
 }
 
-fn top_bar_button() -> Element<'static, Message> {
-    button(text("File").center().size(15.0))
-        .on_press(Message::ButtonTest)
-        .style(|_, _| top_bar_button_style())
-        .height(20.0)
-        .width(Length::Fill)
-        .into()
-}
-
-fn top_bar_button_style() -> button::Style {
-    button::Style {
-        snap: true,
-        border: iced::Border {
-            color: BORDER_COLOR,
-            width: 0.8,
-            radius: Radius::new(0),
-        },
-        text_color: Color::WHITE,
-        ..Default::default()
-    }
-}
 
 fn top_bar_menu_button(
     message: Message,
     content: String,
-    style: button::Style,
 ) -> Element<'static, Message> {
-    button(text(content).center().size(15.0))
-        .on_press(message)
-        .width(Length::Fill)
-        .height(20.0)
-        .style(move |_, _| style)
-        .into()
+    button(
+        text(content)
+            .center()
+            .wrapping(text::Wrapping::None)
+            .size(15.0)
+    ).on_press(message)
+    .width(Length::Fill)
+    .height(20.0)
+    .style(move |_, s| button_menu_style(&s))
+    .into()
+    
 }
 
-fn button_menu_style() -> widget::button::Style {
-    button::Style {
-        text_color: Color::WHITE,
-        border: iced::Border {
-            color: BORDER_COLOR,
-            width: 0.8,
-            radius: Radius::new(0),
+fn button_menu_style(s: &button::Status) -> widget::button::Style {
+    match s {
+        button::Status::Hovered => {
+            button::Style {
+                text_color: Color::WHITE,
+                border: iced::Border {
+                    color: BORDER_COLOR,
+                    width: 0.8,
+                    radius: Radius::new(10.0),
+                },
+                background: Some(iced::Background::Color(BUTTON_HOVERED_COLOR)),
+                ..Default::default()
+            }
         },
-        ..Default::default()
+        _ => {
+            button::Style {
+                text_color: Color::BLACK,
+                border: iced::Border {
+                    color: BORDER_COLOR,
+                    width: 0.8,
+                    radius: Radius::new(10.0),
+                },
+                background: Some(iced::Background::Color(BUTTON_BACKGROUND_COLOR)),
+                ..Default::default()
+            }
+        }
     }
+    
 }
