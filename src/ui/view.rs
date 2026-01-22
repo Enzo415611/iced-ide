@@ -32,7 +32,7 @@ impl App {
                             }
                         }
                     })
-                    .on_resize(10.0, Message::PaneResized);
+                    .on_resize(5.0, Message::PaneResized);
                     
                     let column = column![                        
                         pane_grid

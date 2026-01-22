@@ -5,21 +5,25 @@ use iced_aw::{Menu, MenuBar, menu::Item};
 
 use crate::{App, Message, ui::colors::{BORDER_COLOR, BUTTON_BACKGROUND_COLOR, BUTTON_HOVERED_COLOR}};
 
+
+
+
 impl App {
+    
     pub fn top_bar(&self) -> Element<'_, Message> {
         let file_menu = Item::with_menu(
             top_bar_menu_button(Message::ButtonTest, "File".to_string()),
             Menu::new(
                 vec![
                     Item::new(top_bar_menu_button(Message::OpenFile, "Open File".to_string())),
-                    Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string()))
+                    Item::new(top_bar_menu_button(Message::SaveFile, "Save".to_string()))                  
                 ])
                 .spacing(2.0)
                 .max_width(100.0),
         );
 
         let open_menu = Item::with_menu(
-            button(image("src/assets/menu-hamburguer.png"))
+            button(image(self.images.get(0).unwrap()))
                 .style(|_, s| button_menu_style(&s))
                 .on_press(Message::ButtonTest),
             Menu::new(vec![file_menu]).max_width(100.0),
@@ -27,12 +31,12 @@ impl App {
 
         row![
             row![
-                MenuBar::new(vec![open_menu])
+                MenuBar::new(vec![open_menu]),
             ]
             .width(Length::Fill)
             .align_y(Alignment::Start),
             row![
-                button(image("src/assets/controles-deslizantes-de-configuracoes.png")).style(|_,s| button_menu_style(&s) ).on_press(Message::OpenConfig)
+                button(image(self.images.get(1).unwrap())).style(|_,s| button_menu_style(&s) ).on_press(Message::OpenConfig)
             ]
             .spacing(1.0)
             .align_y(Alignment::End)
